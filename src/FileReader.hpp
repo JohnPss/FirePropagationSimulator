@@ -8,8 +8,4 @@
 
 using namespace std;
 
-class FileReader
-{
-public:
-    MatrixStruct *readFile();
-};
+MatrixStruct *readFile();

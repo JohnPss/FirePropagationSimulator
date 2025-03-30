@@ -1,6 +1,6 @@
 #include "FileReader.hpp"
 
-MatrixStruct *FileReader::readFile()
+MatrixStruct *readFile()
 {
     ifstream inputFile("input.dat");
     MatrixStruct *matStruct = (MatrixStruct *)malloc(sizeof(matStruct));
