@@ -21,3 +21,15 @@ void MatrixStruct::mallocMatrix()
         }
     }
 }
+
+void MatrixStruct::printMatrix()
+{
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+}

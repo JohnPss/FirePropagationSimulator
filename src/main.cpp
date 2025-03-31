@@ -8,6 +8,7 @@ int main()
 
     Animal a = Animal();
     a.findFirstSafePlace(readFile());
+    a.moveAnimal(readFile());
 
     // cout << readFile()->rows << endl;
     return 0;
