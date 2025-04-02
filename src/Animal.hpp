@@ -3,6 +3,11 @@
 #include "MatrixStruct.hpp"
 #include "iostream"
 #include "Util.hpp"
+#include "Forest.hpp"
+#include <vector>
+#include <utility>
+#include <cstdlib>
+#include <ctime>
 
 #include <vector>
 using namespace std;

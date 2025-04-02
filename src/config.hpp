@@ -1,4 +1,4 @@
 #pragma once
 
-int MAX_ITERATIONS;
+int MAX_ITERATIONS = 20;
 bool WIND_ENABLED;

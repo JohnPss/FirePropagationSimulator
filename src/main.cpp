@@ -6,10 +6,15 @@
 int main()
 {
 
-    Animal a = Animal();
-    a.findFirstSafePlace(readFile());
-    a.moveAnimal(readFile());
+    MatrixStruct *m = readFile();
 
-    // cout << readFile()->rows << endl;
+    Animal a = Animal();
+    a.findFirstSafePlace(m);
+
+    for (int i = 0; i < MAX_ITERATIONS; i++)
+    {
+        a.moveAnimal(readFile());
+        // m->printMatrix();
+    }
     return 0;
 }

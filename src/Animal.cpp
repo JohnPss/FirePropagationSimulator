@@ -10,36 +10,104 @@ void Animal::findFirstSafePlace(MatrixStruct *m)
             {
                 x = i;
                 y = j;
-                // cout << "Safe place found at (" << x << ", " << y << ")" << endl;
+                cout << "Safe place found at (" << x << ", " << y << ")" << endl;
                 return;
             }
         }
     }
 }
 
+// void Animal::moveAnimal(MatrixStruct *m)
+// {
+//     int ht = -1, t, tx, ty;
+//     for (int i = 0; i < 4; i++)
+//     {
+
+//         t = m->matrix[x + dx[i]][y + dy[i]];
+
+//         if (prior[t] > ht)
+//         {
+//             ht = prior[t];
+//             tx = x + dx[i];
+//             ty = y + dy[i];
+//         }
+//     }
+
+//     // cout << "Moving to (" << tx << ", " << ty << ")" << endl;
+
+//     // m->printMatrix();
+//     cout << endl;
+//     m->matrix[x][y] = 0;
+//     x = tx;
+//     y = ty;
+//     m->matrix[x][y] = 2;
+//     cout << "Animal moved to (" << x << ", " << y << ")" << endl;
+//     m->printMatrix();
+// }
+
 void Animal::moveAnimal(MatrixStruct *m)
 {
-    int ht = -1, t, tx, ty;
+    int highestPriority = -1;
+    vector<pair<int, int>> candidateCells;
+
     for (int i = 0; i < 4; i++)
     {
+        int newX = x + dx[i];
+        int newY = y + dy[i];
 
-        t = m->matrix[x + dx[i]][y + dy[i]];
-
-        if (prior[t] > ht)
+        if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
         {
-            ht = prior[t];
-            tx = x + dx[i];
-            ty = y + dy[i];
+            int cellType = m->matrix[newX][newY];
+
+            if (cellType != 2)
+            {
+                int currentPriority;
+
+                if (cellType == 4)
+                    currentPriority = 3;
+                else if (cellType == 0 || cellType == 1)
+                    currentPriority = 2;
+                else if (cellType == 3)
+                    currentPriority = 1;
+                else
+                    currentPriority = -1;
+
+                if (currentPriority > highestPriority)
+                {
+                    highestPriority = currentPriority;
+                    candidateCells.clear();
+                    candidateCells.push_back(make_pair(newX, newY));
+                }
+                else if (currentPriority == highestPriority)
+                {
+                    candidateCells.push_back(make_pair(newX, newY));
+                }
+            }
         }
     }
 
-    // cout << "Moving to (" << tx << ", " << ty << ")" << endl;
+    if (!candidateCells.empty())
+    {
+        int randomIndex = rand() % candidateCells.size();
+        int newX = candidateCells[randomIndex].first;
+        int newY = candidateCells[randomIndex].second;
 
-    // m->printMatrix();
-    cout << endl;
-    m->matrix[x][y] = 0;
-    x = tx;
-    y = ty;
-    m->matrix[x][y] = 2;
-    // m->printMatrix();
+        if (m->matrix[newX][newY] == 4)
+        {
+            m->matrix[newX][newY] = 0;
+
+            convertWaterToForest(m, newX, newY);
+        }
+
+        x = newX;
+        y = newY;
+
+        cout << "Animal moved to (" << x << ", " << y << ")" << endl;
+    }
+    else
+    {
+        cout << "Animal cannot move! Trapped at (" << x << ", " << y << ")" << endl;
+    }
+
+    m->printMatrix();
 }
