@@ -2,7 +2,7 @@
 
 int Animal::counter = 0;
 
-void Animal::findFirstSafePlace(MatrixStruct *m)
+void Animal::findFirstSafePlace()
 {
     for (int i = 0; i < m->rows; i++)
     {
@@ -47,7 +47,7 @@ void Animal::findFirstSafePlace(MatrixStruct *m)
 //     m->printMatrix();
 // }
 
-void Animal::moveAnimal(MatrixStruct *m)
+void Animal::moveAnimal()
 {
     if (m->matrix[x][y] == 0)
     {
@@ -68,7 +68,7 @@ void Animal::moveAnimal(MatrixStruct *m)
         int newY = y + dy[i];
 
         {
-            if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
+            if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns && !boolMatrix[newX][newY])
             {
                 int cellType = m->matrix[newX][newY];
 
@@ -105,6 +105,7 @@ void Animal::moveAnimal(MatrixStruct *m)
         int randomIndex = rand() % candidateCells.size();
         int newX = candidateCells[randomIndex].first;
         int newY = candidateCells[randomIndex].second;
+        boolMatrix[newX][newY] = true;
 
         if (m->matrix[newX][newY] == 4)
         {
@@ -116,7 +117,9 @@ void Animal::moveAnimal(MatrixStruct *m)
         x = newX;
         y = newY;
         // m->printMatrix();
-        cout << "Animal moved to (" << x << ", " << y << ")" << endl;
+        printBoolMatrix();
+        cout
+            << "Animal moved to (" << x << ", " << y << ")" << endl;
     }
     else
     {
@@ -137,4 +140,17 @@ bool Animal::countThreeTimes()
 void Animal::resetCounter()
 {
     counter = 0;
+}
+
+void Animal::printBoolMatrix()
+{
+    cout << "Bool matrix:" << endl;
+    for (int i = 0; i < m->rows; i++)
+    {
+        for (int j = 0; j < m->columns; j++)
+        {
+            cout << boolMatrix[i][j] << " ";
+        }
+        cout << endl;
+    }
 }

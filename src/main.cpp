@@ -8,13 +8,12 @@ int main()
 
     MatrixStruct *m = readFile();
 
-    Animal a = Animal();
-    a.findFirstSafePlace(m);
+    Animal a = Animal(m);
 
     for (int i = 0; i < MAX_ITERATIONS; i++)
     {
 
-        a.moveAnimal(m);
+        a.moveAnimal();
     }
 
     return 0;

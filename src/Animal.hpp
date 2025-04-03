@@ -14,15 +14,26 @@ using namespace std;
 
 class Animal
 {
-private:
-    static int counter;
-
 public:
-    int x, y;
+    static int counter;
+    MatrixStruct *m;
+
+    vector<vector<bool>> boolMatrix;
+    int x,
+        y;
     int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
 
-    void findFirstSafePlace(MatrixStruct *m);
-    void moveAnimal(MatrixStruct *m);
+    Animal(MatrixStruct *matrix)
+    {
+        m = matrix;
+        counter = 0;
+        findFirstSafePlace();
+        boolMatrix.resize(matrix->rows, vector<bool>(matrix->columns, false));
+    }
+
+    void findFirstSafePlace();
+    void moveAnimal();
     bool countThreeTimes();
     void resetCounter();
+    void printBoolMatrix();
 };
