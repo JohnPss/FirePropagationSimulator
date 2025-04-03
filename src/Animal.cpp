@@ -1,5 +1,7 @@
 #include "Animal.hpp"
 
+int Animal::counter = 0;
+
 void Animal::findFirstSafePlace(MatrixStruct *m)
 {
     for (int i = 0; i < m->rows; i++)
@@ -47,6 +49,16 @@ void Animal::findFirstSafePlace(MatrixStruct *m)
 
 void Animal::moveAnimal(MatrixStruct *m)
 {
+    if (m->matrix[x][y] == 0)
+    {
+        if (countThreeTimes())
+        {
+            cout << "Dint move, thats zero" << endl;
+            return;
+        }
+    }
+
+    resetCounter();
     int highestPriority = -1;
     vector<pair<int, int>> candidateCells;
 
@@ -55,32 +67,34 @@ void Animal::moveAnimal(MatrixStruct *m)
         int newX = x + dx[i];
         int newY = y + dy[i];
 
-        if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
         {
-            int cellType = m->matrix[newX][newY];
-
-            if (cellType != 2)
+            if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
             {
-                int currentPriority;
+                int cellType = m->matrix[newX][newY];
 
-                if (cellType == 4)
-                    currentPriority = 3;
-                else if (cellType == 0 || cellType == 1)
-                    currentPriority = 2;
-                else if (cellType == 3)
-                    currentPriority = 1;
-                else
-                    currentPriority = -1;
+                if (cellType != 2)
+                {
+                    int currentPriority;
 
-                if (currentPriority > highestPriority)
-                {
-                    highestPriority = currentPriority;
-                    candidateCells.clear();
-                    candidateCells.push_back(make_pair(newX, newY));
-                }
-                else if (currentPriority == highestPriority)
-                {
-                    candidateCells.push_back(make_pair(newX, newY));
+                    if (cellType == 4)
+                        currentPriority = 3;
+                    else if (cellType == 0 || cellType == 1)
+                        currentPriority = 2;
+                    else if (cellType == 3)
+                        currentPriority = 1;
+                    else
+                        currentPriority = -1;
+
+                    if (currentPriority > highestPriority)
+                    {
+                        highestPriority = currentPriority;
+                        candidateCells.clear();
+                        candidateCells.push_back(make_pair(newX, newY));
+                    }
+                    else if (currentPriority == highestPriority)
+                    {
+                        candidateCells.push_back(make_pair(newX, newY));
+                    }
                 }
             }
         }
@@ -101,13 +115,26 @@ void Animal::moveAnimal(MatrixStruct *m)
 
         x = newX;
         y = newY;
-
+        // m->printMatrix();
         cout << "Animal moved to (" << x << ", " << y << ")" << endl;
     }
     else
     {
         cout << "Animal cannot move! Trapped at (" << x << ", " << y << ")" << endl;
     }
+}
 
-    m->printMatrix();
+bool Animal::countThreeTimes()
+{
+    if (counter < 3)
+    {
+        counter++;
+        return true;
+    }
+    return false;
+}
+
+void Animal::resetCounter()
+{
+    counter = 0;
 }

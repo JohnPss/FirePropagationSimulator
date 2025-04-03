@@ -13,8 +13,9 @@ int main()
 
     for (int i = 0; i < MAX_ITERATIONS; i++)
     {
-        a.moveAnimal(readFile());
-        // m->printMatrix();
+
+        a.moveAnimal(m);
     }
+
     return 0;
 }
