@@ -3,7 +3,6 @@
 #include "MatrixStruct.hpp"
 #include "iostream"
 #include "Util.hpp"
-#include "Forest.hpp"
 #include <vector>
 #include <utility>
 #include <cstdlib>
@@ -19,21 +18,23 @@ public:
     MatrixStruct *m;
 
     vector<vector<bool>> boolMatrix;
-    int x,
-        y;
+    int x, y;
     int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
+
+    vector<vector<int>> animalLocation;
 
     Animal(MatrixStruct *matrix)
     {
         m = matrix;
         counter = 0;
         findFirstSafePlace();
-        boolMatrix.resize(matrix->rows, vector<bool>(matrix->columns, false));
+        animalLocation.resize(m->rows, vector<int>(m->columns, 0));
     }
 
-    void findFirstSafePlace();
     void moveAnimal();
+    void findFirstSafePlace();
     bool countThreeTimes();
     void resetCounter();
-    void printBoolMatrix();
+    void animalLocationOnMatrix();
+    void convertWaterToForest(int x, int y);
 };

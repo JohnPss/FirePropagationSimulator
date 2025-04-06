@@ -1,20 +1,23 @@
-#include <iostream>
-#include "FileReader.hpp"
-#include "config.hpp"
-#include "Animal.hpp"
+#include "Simulation.hpp"
 
 int main()
 {
 
     MatrixStruct *m = readFile();
 
-    Animal a = Animal(m);
+    // startSimulation(m);
+    // Fire fire = Fire(m);
 
-    for (int i = 0; i < MAX_ITERATIONS; i++)
-    {
+    startSimulation(m);
 
-        a.moveAnimal();
-    }
+    // for (int i = 0; i < 20; i++)
+    // {
+    //     cout << "Iteração " << i << ":" << endl;
+    //     fire.spreadFire();
+    //     fire.burning();
+    //     m->printMatrix();
+    //     cout << endl;
+    // }
 
     return 0;
 }

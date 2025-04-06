@@ -19,34 +19,6 @@ void Animal::findFirstSafePlace()
     }
 }
 
-// void Animal::moveAnimal(MatrixStruct *m)
-// {
-//     int ht = -1, t, tx, ty;
-//     for (int i = 0; i < 4; i++)
-//     {
-
-//         t = m->matrix[x + dx[i]][y + dy[i]];
-
-//         if (prior[t] > ht)
-//         {
-//             ht = prior[t];
-//             tx = x + dx[i];
-//             ty = y + dy[i];
-//         }
-//     }
-
-//     // cout << "Moving to (" << tx << ", " << ty << ")" << endl;
-
-//     // m->printMatrix();
-//     cout << endl;
-//     m->matrix[x][y] = 0;
-//     x = tx;
-//     y = ty;
-//     m->matrix[x][y] = 2;
-//     cout << "Animal moved to (" << x << ", " << y << ")" << endl;
-//     m->printMatrix();
-// }
-
 void Animal::moveAnimal()
 {
     if (m->matrix[x][y] == 0)
@@ -68,7 +40,7 @@ void Animal::moveAnimal()
         int newY = y + dy[i];
 
         {
-            if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns && !boolMatrix[newX][newY])
+            if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
             {
                 int cellType = m->matrix[newX][newY];
 
@@ -105,19 +77,18 @@ void Animal::moveAnimal()
         int randomIndex = rand() % candidateCells.size();
         int newX = candidateCells[randomIndex].first;
         int newY = candidateCells[randomIndex].second;
-        boolMatrix[newX][newY] = true;
 
         if (m->matrix[newX][newY] == 4)
         {
             m->matrix[newX][newY] = 0;
 
-            convertWaterToForest(m, newX, newY);
+            convertWaterToForest(newX, newY);
         }
 
         x = newX;
         y = newY;
+        // animalLocationOnMatrix();
         // m->printMatrix();
-        printBoolMatrix();
         cout
             << "Animal moved to (" << x << ", " << y << ")" << endl;
     }
@@ -142,15 +113,31 @@ void Animal::resetCounter()
     counter = 0;
 }
 
-void Animal::printBoolMatrix()
+void Animal::animalLocationOnMatrix()
 {
-    cout << "Bool matrix:" << endl;
+    animalLocation[x][y] = 2;
     for (int i = 0; i < m->rows; i++)
     {
         for (int j = 0; j < m->columns; j++)
         {
-            cout << boolMatrix[i][j] << " ";
+            cout << animalLocation[i][j] << " ";
         }
         cout << endl;
+    }
+}
+
+void Animal::convertWaterToForest(int x, int y)
+{
+    m->matrix[x][y] = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        int newX = x + dx[i];
+        int newY = y + dy[i];
+
+        if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
+        {
+            m->matrix[newX][newY] = 1;
+        }
     }
 }
