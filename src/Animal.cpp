@@ -8,7 +8,7 @@ void Animal::findFirstSafePlace()
     {
         for (int j = 0; j < m->columns; j++)
         {
-            if (m->matrix[i][j] == 0)
+            if (m->matrix[i][j] == 1)
             {
                 x = i;
                 y = j;
@@ -140,4 +140,21 @@ void Animal::convertWaterToForest(int x, int y)
             m->matrix[newX][newY] = 1;
         }
     }
+}
+
+bool Animal::checkSurvival()
+{
+    if (m->matrix[x][y] == 2)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Animal::giveSecondChance()
+{
+    moveAnimal();
 }

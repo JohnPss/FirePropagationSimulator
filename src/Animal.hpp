@@ -37,4 +37,6 @@ public:
     void resetCounter();
     void animalLocationOnMatrix();
     void convertWaterToForest(int x, int y);
+    bool checkSurvival();
+    void giveSecondChance();
 };

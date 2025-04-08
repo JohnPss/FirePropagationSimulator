@@ -16,18 +16,19 @@ Fire::Fire(MatrixStruct *matrix)
 
 void Fire::doIt()
 {
-    // for (int i = 0; i < 20; i++)
-    // {
-    // cout << "Iteração " << iter << ":" << endl;
     spreadFire();
     burning();
     m->printMatrix();
-    // cout << endl;
-    // }
 }
 
 void Fire::spreadFire()
 {
+    if (currentBurning.empty())
+    {
+        cout << "No more cells burning!" << endl;
+        return;
+    }
+
     int dx[4] = {-1, 1, 0, 0};
     int dy[4] = {0, 0, -1, 1};
     string directions[4] = {"esquerda", "direita", "acima", "abaixo"};
@@ -48,7 +49,6 @@ void Fire::spreadFire()
             {
                 m->matrix[newX][newY] = 2;
                 nextToBurn.push_back(make_pair(newX, newY));
-                // cout << "(" << newX << "," << newY << ") vira 2 (" << directions[i] << ")" << endl;
             }
         }
     }
@@ -59,10 +59,6 @@ void Fire::burning()
     for (const auto &cell : burningCells)
     {
         m->matrix[cell.first][cell.second] = 3;
-        // if (cell.first == centerX && cell.second == centerY)
-        //     cout << "(" << cell.first << "," << cell.second << ") vira 3 (posição inicial)" << endl;
-        // else
-        //     cout << "(" << cell.first << "," << cell.second << ") vira 3 (anterior)" << endl;
     }
     burningCells.clear();
 

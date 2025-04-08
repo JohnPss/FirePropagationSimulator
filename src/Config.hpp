@@ -1,4 +1,4 @@
 #pragma once
 
-const int MAX_ITERATIONS = 15;
+const int MAX_ITERATIONS = 40;
 // const bool WIND_ENABLED;

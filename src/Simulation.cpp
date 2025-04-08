@@ -2,7 +2,7 @@
 
 void startSimulation(MatrixStruct *m)
 {
-
+    int chancesLeft = 1;
     Animal a = Animal(m);
     Fire f = Fire(m);
 
@@ -12,10 +12,16 @@ void startSimulation(MatrixStruct *m)
 
         cout << "Iteration " << i + 1 << ":" << endl;
         a.moveAnimal();
-        // f.spreadFire();
-        // f.burning();
         f.doIt();
-        // m->printMatrix();
-        cout << endl;
+
+        if (a.checkSurvival() && chancesLeft == 1)
+        {
+            cout << "Animal`s dead, second chance!" << endl;
+            a.giveSecondChance();
+            chancesLeft--;
+        }
+
+        cout
+            << endl;
     }
 }
