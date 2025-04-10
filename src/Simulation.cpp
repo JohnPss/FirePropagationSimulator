@@ -24,4 +24,6 @@ void startSimulation(MatrixStruct *m)
         cout
             << endl;
     }
+
+    cout << a.waterFind << " " << a.steps << endl;
 }

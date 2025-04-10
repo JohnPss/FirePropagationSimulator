@@ -29,7 +29,7 @@ void Animal::moveAnimal()
             return;
         }
     }
-
+    steps++;
     resetCounter();
     int highestPriority = -1;
     vector<pair<int, int>> candidateCells;
@@ -81,6 +81,7 @@ void Animal::moveAnimal()
         if (m->matrix[newX][newY] == 4)
         {
             m->matrix[newX][newY] = 0;
+            waterFind++;
 
             convertWaterToForest(newX, newY);
         }

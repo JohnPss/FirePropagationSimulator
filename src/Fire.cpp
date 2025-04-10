@@ -14,11 +14,13 @@ Fire::Fire(MatrixStruct *matrix)
     currentBurning.push(make_pair(centerX, centerY));
 }
 
-void Fire::doIt()
+bool Fire::doIt()
 {
     spreadFire();
     burning();
     m->printMatrix();
+
+    return !burningCells.empty();
 }
 
 void Fire::spreadFire()
@@ -31,7 +33,6 @@ void Fire::spreadFire()
 
     int dx[4] = {-1, 1, 0, 0};
     int dy[4] = {0, 0, -1, 1};
-    string directions[4] = {"esquerda", "direita", "acima", "abaixo"};
 
     while (!currentBurning.empty())
     {

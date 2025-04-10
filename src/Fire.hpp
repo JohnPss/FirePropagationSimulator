@@ -18,5 +18,5 @@ public:
     void spreadFire();
     void burning();
     bool isValidCell(int x, int y);
-    void doIt();
+    bool doIt();
 };
