@@ -4,23 +4,33 @@
 #include <vector>
 #include <utility>
 #include <string>
-using namespace std;
 
-Fire::Fire(MatrixStruct *matrix)
+const int dx[4] = {-1, 1, 0, 0};
+const int dy[4] = {0, 0, -1, 1};
+
+enum CellState
 {
-    m = matrix;
+    EMPTY = 0,
+    BURNABLE = 1,
+    BURNING = 2,
+    BURNT = 3
+};
+
+Fire::Fire(MatrixStruct *matrix) : m(matrix)
+{
     centerX = m->intial_x;
     centerY = m->initial_y;
+
     currentBurning.push(make_pair(centerX, centerY));
 }
 
 bool Fire::doIt()
 {
     spreadFire();
-    burning();
+    updateBurningCells();
     m->printMatrix();
 
-    return !burningCells.empty();
+    return !currentBurning.empty();
 }
 
 void Fire::spreadFire()
@@ -30,9 +40,6 @@ void Fire::spreadFire()
         cout << "No more cells burning!" << endl;
         return;
     }
-
-    int dx[4] = {-1, 1, 0, 0};
-    int dy[4] = {0, 0, -1, 1};
 
     while (!currentBurning.empty())
     {
@@ -46,20 +53,20 @@ void Fire::spreadFire()
             int newX = cell.first + dx[i];
             int newY = cell.second + dy[i];
 
-            if (isValidCell(newX, newY))
+            if (isValidBurnableCell(newX, newY))
             {
-                m->matrix[newX][newY] = 2;
+                m->matrix[newX][newY] = BURNING;
                 nextToBurn.push_back(make_pair(newX, newY));
             }
         }
     }
 }
 
-void Fire::burning()
+void Fire::updateBurningCells()
 {
     for (const auto &cell : burningCells)
     {
-        m->matrix[cell.first][cell.second] = 3;
+        m->matrix[cell.first][cell.second] = BURNT;
     }
     burningCells.clear();
 
@@ -70,7 +77,9 @@ void Fire::burning()
     nextToBurn.clear();
 }
 
-bool Fire::isValidCell(int x, int y)
+bool Fire::isValidBurnableCell(int x, int y) const
 {
-    return (x >= 0 && x < m->rows && y >= 0 && y < m->columns && m->matrix[x][y] == 1);
+    return (x >= 0 && x < m->rows &&
+            y >= 0 && y < m->columns &&
+            m->matrix[x][y] == BURNABLE);
 }

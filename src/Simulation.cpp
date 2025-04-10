@@ -8,12 +8,14 @@ void startSimulation(MatrixStruct *m)
 
     for (int i = 0; i < MAX_ITERATIONS; i++)
     {
-        // m->printMatrix();
-
         cout << "Iteration " << i + 1 << ":" << endl;
         a.moveAnimal();
-        f.doIt();
-
+        bool aux = f.doIt();
+        if (!aux)
+        {
+            cout << "Nore more trees burning!" << endl;
+            break;
+        }
         if (a.checkSurvival() && chancesLeft == 1)
         {
             cout << "Animal`s dead, second chance!" << endl;
