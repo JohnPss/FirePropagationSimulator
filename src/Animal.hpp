@@ -1,43 +1,69 @@
 #pragma once
 
 #include "MatrixStruct.hpp"
-#include "iostream"
-#include "Util.hpp"
+#include <iostream>
 #include <vector>
 #include <utility>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+#include <string>
 
-#include <vector>
 using namespace std;
+
+enum TerrainState
+{
+    EMPTY = 0,
+    TREE = 1,
+    BURNING = 2,
+    BURNT = 3,
+    WATER = 4
+};
+
+enum MovePriority
+{
+    NONE = 0,
+    LOW = 1,
+    MEDIUM = 2,
+    HIGH = 3
+};
 
 class Animal
 {
-public:
-    static int counter;
+private:
     MatrixStruct *m;
-
-    vector<vector<bool>> boolMatrix;
     int x, y;
-    int waterFind = 0, steps = 0;
-    int dx[4] = {1, -1, 0, 0}, dy[4] = {0, 0, 1, -1};
+    static int stayCounter;
+    int dx[4] = {1, -1, 0, 0};
+    int dy[4] = {0, 0, 1, -1};
+    vector<vector<int>> animalPath;
+    vector<pair<int, int>> pathSequence; // Add this line
 
-    vector<vector<int>> animalLocation;
+    ofstream &outPutFile;
 
-    Animal(MatrixStruct *matrix)
-    {
-        m = matrix;
-        counter = 0;
-        findFirstSafePlace();
-        animalLocation.resize(m->rows, vector<int>(m->columns, 0));
-    }
-
-    void moveAnimal();
     void findFirstSafePlace();
-    bool countThreeTimes();
-    void resetCounter();
-    void animalLocationOnMatrix();
+    bool shouldStayInEmptyArea();
+    void resetStayCounter();
     void convertWaterToForest(int x, int y);
-    bool checkSurvival();
-    void giveSecondChance();
+    void recordPosition();
+    int getCellPriority(int cellType);
+
+public:
+    int waterFound;
+    int steps;
+    int deathIteration;
+
+    Animal(MatrixStruct *matrix, ofstream &outputFile);
+    ~Animal();
+    bool moveAnimal();
+    bool isInDanger();
+    bool tryToEscape();
+    void recordStatus(int iteration);
+    void savePathMap();
+    void recordDeath(int iteration);
+
+    pair<int, int> getPosition()
+    {
+        return make_pair(x, y);
+    }
 };

@@ -5,4 +5,4 @@
 #include "Fire.hpp"
 #include "Config.hpp"
 
-void startSimulation(MatrixStruct *m);
+void startSimulation(MatrixStruct *m, ofstream &outputFile);

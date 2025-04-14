@@ -1,36 +1,148 @@
 #include "Animal.hpp"
 
-int Animal::counter = 0;
+// Inicialização do contador estático
+int Animal::stayCounter = 0;
 
-void Animal::findFirstSafePlace()
+Animal::Animal(MatrixStruct *matrix, ofstream &outputFile) : m(matrix), outPutFile(outputFile), waterFound(0), steps(0), deathIteration(-1)
 {
-    for (int i = 0; i < m->rows; i++)
+    srand(time(NULL));
+    findFirstSafePlace();
+    pathSequence.emplace_back(x, y);
+    animalPath.resize(m->rows, vector<int>(m->columns, 0));
+
+    if (!outPutFile.is_open())
     {
-        for (int j = 0; j < m->columns; j++)
+        cerr << "Error: Could not open animal_journey.dat file!" << endl;
+    }
+
+    outPutFile << "Animal journey log:" << endl;
+    outPutFile << "Starting position: (" << x << ", " << y << ")" << endl;
+
+    recordPosition();
+}
+
+Animal::~Animal()
+{
+    if (outPutFile.is_open())
+    {
+        outPutFile << endl
+                   << "Journey summary:" << endl;
+        // Output path
+        outPutFile << "Caminho do animal: ";
+        for (size_t idx = 0; idx < pathSequence.size(); ++idx)
         {
-            if (m->matrix[i][j] == 1)
-            {
-                x = i;
-                y = j;
-                cout << "Safe place found at (" << x << ", " << y << ")" << endl;
-                return;
-            }
+            if (idx > 0)
+                outPutFile << " -> ";
+            outPutFile << "(" << pathSequence[idx].first << "," << pathSequence[idx].second << ")";
+        }
+        outPutFile << endl;
+        // ... rest of summary
+        outPutFile << "Passos totais: " << steps << endl;
+        outPutFile << "Encontrou água: " << waterFound << (waterFound == 1 ? " vez" : " vezes") << endl;
+        if (deathIteration > 0)
+        {
+            outPutFile << "Iteração cercado: " << deathIteration << endl;
+            outPutFile << "Animal sobreviveu: Não" << endl;
+        }
+        else
+        {
+            outPutFile << "Iteração cercado: N/A" << endl;
+            outPutFile << "Animal sobreviveu: Sim" << endl;
         }
     }
 }
 
-void Animal::moveAnimal()
+void Animal::findFirstSafePlace()
 {
-    if (m->matrix[x][y] == 0)
+    bool found = false;
+
+    for (int i = 0; i < m->rows && !found; i++)
     {
-        if (countThreeTimes())
+        for (int j = 0; j < m->columns && !found; j++)
         {
-            cout << "Dint move, thats zero" << endl;
-            return;
+            if (m->matrix[i][j] == TREE)
+            {
+                x = i;
+                y = j;
+                found = true;
+                cout << "Safe place (tree) found at (" << x << ", " << y << ")" << endl;
+            }
         }
     }
-    steps++;
-    resetCounter();
+
+    if (!found)
+    {
+        for (int i = 0; i < m->rows && !found; i++)
+        {
+            for (int j = 0; j < m->columns && !found; j++)
+            {
+                if (m->matrix[i][j] == EMPTY)
+                {
+                    x = i;
+                    y = j;
+                    found = true;
+                    cout << "Safe place (empty) found at (" << x << ", " << y << ")" << endl;
+                }
+            }
+        }
+    }
+
+    if (!found)
+    {
+        cerr << "Error: Could not find a safe place for the animal!" << endl;
+        x = 0;
+        y = 0;
+    }
+}
+
+bool Animal::shouldStayInEmptyArea()
+{
+    if (m->matrix[x][y] == EMPTY)
+    {
+        if (stayCounter < 3)
+        {
+            stayCounter++;
+            return true;
+        }
+    }
+    return false;
+}
+
+void Animal::resetStayCounter()
+{
+    stayCounter = 0;
+}
+
+int Animal::getCellPriority(int cellType)
+{
+    switch (cellType)
+    {
+    case WATER:
+        return HIGH;
+    case EMPTY:
+        return MEDIUM;
+    case TREE:
+        return MEDIUM;
+    case BURNT:
+        return LOW;
+    default:
+        return NONE;
+    }
+}
+
+bool Animal::moveAnimal()
+{
+    // Se estiver em área vazia, pode ficar até 3 iterações
+    if (shouldStayInEmptyArea())
+    {
+        cout << "Animal stayed in place at empty area (" << x << ", " << y << ")" << endl;
+        outPutFile << "Decision: Stayed in empty area" << endl;
+        return true;
+    }
+
+    resetStayCounter();
+
+    // Encontrar a melhor célula para movimentação
     int highestPriority = -1;
     vector<pair<int, int>> candidateCells;
 
@@ -39,97 +151,77 @@ void Animal::moveAnimal()
         int newX = x + dx[i];
         int newY = y + dy[i];
 
+        if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
         {
-            if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
+            int cellType = m->matrix[newX][newY];
+
+            if (cellType != BURNING)
             {
-                int cellType = m->matrix[newX][newY];
+                int priority = getCellPriority(cellType);
 
-                if (cellType != 2)
+                if (priority > highestPriority)
                 {
-                    int currentPriority;
-
-                    if (cellType == 4)
-                        currentPriority = 3;
-                    else if (cellType == 0 || cellType == 1)
-                        currentPriority = 2;
-                    else if (cellType == 3)
-                        currentPriority = 1;
-                    else
-                        currentPriority = -1;
-
-                    if (currentPriority > highestPriority)
-                    {
-                        highestPriority = currentPriority;
-                        candidateCells.clear();
-                        candidateCells.push_back(make_pair(newX, newY));
-                    }
-                    else if (currentPriority == highestPriority)
-                    {
-                        candidateCells.push_back(make_pair(newX, newY));
-                    }
+                    highestPriority = priority;
+                    candidateCells.clear();
+                    candidateCells.push_back(make_pair(newX, newY));
+                }
+                else if (priority == highestPriority)
+                {
+                    candidateCells.push_back(make_pair(newX, newY));
                 }
             }
         }
     }
 
+    // Se encontrou células candidatas, move para uma delas aleatoriamente
     if (!candidateCells.empty())
     {
         int randomIndex = rand() % candidateCells.size();
         int newX = candidateCells[randomIndex].first;
         int newY = candidateCells[randomIndex].second;
 
-        if (m->matrix[newX][newY] == 4)
-        {
-            m->matrix[newX][newY] = 0;
-            waterFind++;
+        steps++;
+        outPutFile << "Step " << steps << ": Moving to (" << newX << ", " << newY << ")";
 
+        // Verifica se encontrou água
+        if (m->matrix[newX][newY] == WATER)
+        {
+            m->matrix[newX][newY] = EMPTY;
+            waterFound++;
             convertWaterToForest(newX, newY);
+            outPutFile << " - Found water! Total found: " << waterFound << endl;
+        }
+        else
+        {
+            outPutFile << endl;
         }
 
         x = newX;
         y = newY;
-        // animalLocationOnMatrix();
-        // m->printMatrix();
-        cout
-            << "Animal moved to (" << x << ", " << y << ")" << endl;
+        pathSequence.emplace_back(x, y);
+        recordPosition();
+
+        cout << "Animal moved to (" << x << ", " << y << ")" << endl;
+        return true;
     }
     else
     {
         cout << "Animal cannot move! Trapped at (" << x << ", " << y << ")" << endl;
+        outPutFile << "WARNING: Animal trapped at (" << x << ", " << y << ")" << endl;
+        return false;
     }
 }
 
-bool Animal::countThreeTimes()
+void Animal::recordPosition()
 {
-    if (counter < 3)
-    {
-        counter++;
-        return true;
-    }
-    return false;
-}
-
-void Animal::resetCounter()
-{
-    counter = 0;
-}
-
-void Animal::animalLocationOnMatrix()
-{
-    animalLocation[x][y] = 2;
-    for (int i = 0; i < m->rows; i++)
-    {
-        for (int j = 0; j < m->columns; j++)
-        {
-            cout << animalLocation[i][j] << " ";
-        }
-        cout << endl;
-    }
+    animalPath[x][y]++;
 }
 
 void Animal::convertWaterToForest(int x, int y)
 {
-    m->matrix[x][y] = 0;
+    m->matrix[x][y] = EMPTY;
+
+    outPutFile << "Converting surrounding cells to forest around (" << x << ", " << y << ")" << endl;
 
     for (int i = 0; i < 4; i++)
     {
@@ -138,24 +230,78 @@ void Animal::convertWaterToForest(int x, int y)
 
         if (newX >= 0 && newX < m->rows && newY >= 0 && newY < m->columns)
         {
-            m->matrix[newX][newY] = 1;
+            m->matrix[newX][newY] = TREE;
         }
     }
 }
 
-bool Animal::checkSurvival()
+bool Animal::isInDanger()
 {
-    if (m->matrix[x][y] == 2)
+    return (m->matrix[x][y] == BURNING);
+}
+
+bool Animal::tryToEscape()
+{
+    outPutFile << "EMERGENCY: Animal in danger! Trying to escape..." << endl;
+    return moveAnimal();
+}
+
+void Animal::savePathMap()
+{
+    ofstream pathMapFile("animal_path_map.dat");
+
+    if (pathMapFile.is_open())
     {
-        return true;
+        pathMapFile << "Animal Path Frequency Map:" << endl;
+        pathMapFile << "(Higher numbers indicate more frequent visits)" << endl
+                    << endl;
+
+        for (int i = 0; i < m->rows; i++)
+        {
+            for (int j = 0; j < m->columns; j++)
+            {
+                if (animalPath[i][j] > 0)
+                {
+                    pathMapFile << animalPath[i][j] << " ";
+                }
+                else
+                {
+                    pathMapFile << ". ";
+                }
+            }
+            pathMapFile << endl;
+        }
+
+        pathMapFile.close();
+        cout << "Animal path map saved to animal_path_map.dat" << endl;
     }
     else
     {
-        return false;
+        cerr << "Error: Could not save animal path map!" << endl;
     }
 }
 
-void Animal::giveSecondChance()
+void Animal::recordDeath(int iteration)
 {
-    moveAnimal();
+    deathIteration = iteration;
+    outPutFile << "DEATH: Animal died at iteration " << iteration << " at position (" << x << ", " << y << ")" << endl;
+}
+
+void Animal::recordStatus(int iteration)
+{
+    outPutFile << "Iteration " << iteration << ": ";
+    outPutFile << "Position (" << x << ", " << y << "), ";
+    outPutFile << "Steps: " << steps << ", ";
+    outPutFile << "Water found: " << waterFound << ", ";
+
+    // Add information about danger state
+    if (isInDanger())
+    {
+        outPutFile << "Status: IN DANGER";
+    }
+    else
+    {
+        outPutFile << "Status: Safe";
+    }
+    outPutFile << endl;
 }

@@ -5,7 +5,7 @@ using namespace std;
 
 typedef struct MatrixStruct
 {
-    int intial_x, initial_y, rows, columns;
+    int initial_x, initial_y, rows, columns;
     int **matrix;
 
     void mallocMatrix();

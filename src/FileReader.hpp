@@ -9,3 +9,5 @@
 using namespace std;
 
 MatrixStruct *readFile();
+ofstream outPutFile();
+// void writeToOutputFile(MatrixStruct *m, int iteration);

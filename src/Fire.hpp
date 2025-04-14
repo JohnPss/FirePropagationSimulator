@@ -17,15 +17,16 @@ private:
     int centerY;
 
     queue<pair<int, int>> currentBurning;
-
     vector<pair<int, int>> burningCells;
-
     vector<pair<int, int>> nextToBurn;
+    vector<pair<int, int>> firstBurnStage;
 
+    vector<string> changeLog; //
     bool isValidBurnableCell(int x, int y) const;
 
 public:
     Fire(MatrixStruct *matrix);
+    vector<string> getChangeLog();
     bool doIt();
     void spreadFire();
     void updateBurningCells();
