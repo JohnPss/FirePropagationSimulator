@@ -1,18 +1,12 @@
 #include "Simulation.hpp"
 #include <sstream>
 
-void startSimulation(MatrixStruct *m, ofstream &outputFile)
+void startSimulation(MatrixStruct *m)
 {
-    int chancesLeft = 1;     // Number of chances for the animal
-    Animal a(m, outputFile); // Create an animal
-    Fire f(m);               // Create fire
-
-    // ofstream outputFile(outputPath);
-    // if (!outputFile.is_open())
-    // {
-    //     cerr << "Error: Unable to open output file: " << outputPath << endl;
-    //     return;
-    // }
+    FileReader::openOutputFile();
+    int chancesLeft = 1; // Number of chances for the animal
+    Animal a(m);         // Create an animal
+    Fire f(m);           // Create fire
 
     auto positionToString = [](const std::pair<int, int> &pos) -> std::string
     {
@@ -31,25 +25,27 @@ void startSimulation(MatrixStruct *m, ofstream &outputFile)
         vector<string> fireChanges = f.getChangeLog();
         for (const string &change : fireChanges)
         {
-            outputFile << change << endl;
+            FileReader::writeToOutput(change);
         }
 
         // Print matrix state
-        outputFile << "Iteração " << (i + 1) << ":" << endl;
+        FileReader::writeToOutput("Iteração " + std::to_string(i + 1) + ":");
+
+        std::stringstream matrixStr;
         for (int row = 0; row < m->rows; row++)
         {
             for (int col = 0; col < m->columns; col++)
             {
-                outputFile << m->matrix[row][col] << " ";
+                matrixStr << m->matrix[row][col] << " ";
             }
-            outputFile << endl;
+            matrixStr << "\n";
         }
-        outputFile << endl;
+        matrixStr << "\n";
+        FileReader::writeToOutput(matrixStr.str());
 
         if (!fireSpread)
         {
-            cout << "No more trees burning!" << endl;
-            outputFile << "No more trees burning!" << endl;
+            FileReader::writeToOutput("No more trees burning!");
             break;
         }
 
@@ -58,20 +54,21 @@ void startSimulation(MatrixStruct *m, ofstream &outputFile)
         {
             if (chancesLeft > 0)
             {
-                cout << "Animal is in danger, trying to escape!" << endl;
-                outputFile << "Animal is in danger, trying to escape!" << endl;
+
+                FileReader::writeToOutput("Animal is in danger, trying to escape!");
 
                 bool escaped = a.tryToEscape();
                 if (escaped)
                 {
-                    outputFile << "New Animal Position: " << positionToString(a.getPosition()) << endl;
+                    FileReader::writeToOutput("New Animal Position: " + positionToString(a.getPosition()));
                     chancesLeft--;
                 }
                 else
                 {
                     // Animal couldn't escape
                     a.recordDeath(i + 1);
-                    outputFile << "Animal failed to escape and died at iteration " << (i + 1) << endl;
+                    FileReader::writeToOutput("Animal failed to escape and died at iteration " + std::to_string(i + 1));
+
                     chancesLeft = 0; // No more chances
                 }
             }
@@ -79,12 +76,10 @@ void startSimulation(MatrixStruct *m, ofstream &outputFile)
             {
                 // Animal has no more chances
                 a.recordDeath(i + 1);
-                outputFile << "Animal died at iteration " << (i + 1) << " with no chances left" << endl;
+                FileReader::writeToOutput("Animal died at iteration " + std::to_string(i + 1) + " with no chances left");
                 // Simulation continues even after animal's death
             }
         }
-
-        cout << endl;
     }
 
     // Save the animal's path and close the output file

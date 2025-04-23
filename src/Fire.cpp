@@ -17,22 +17,6 @@ Fire::Fire(MatrixStruct *matrix) : m(matrix)
     centerY = m->initial_y;
 
     currentBurning.push(make_pair(centerX, centerY));
-
-    if (WIND_ENABLED)
-    {
-        cout << "Wind is enabled with directions: ";
-        string directions[4] = {"North", "South", "West", "East"};
-        for (int i = 0; i < 4; i++)
-        {
-            if (WIND_DIRECTIONS[i])
-                cout << directions[i] << " ";
-        }
-        cout << endl;
-    }
-    else
-    {
-        cout << "Wind is disabled. Fire spreads in all directions." << endl;
-    }
 }
 
 bool Fire::doIt()
@@ -46,7 +30,6 @@ void Fire::spreadFire()
 {
     if (currentBurning.empty())
     {
-        cout << "No more cells burning!" << endl;
         return;
     }
 

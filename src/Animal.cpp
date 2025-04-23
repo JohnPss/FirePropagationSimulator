@@ -1,54 +1,47 @@
 #include "Animal.hpp"
 
-// Inicialização do contador estático
 int Animal::stayCounter = 0;
 
-Animal::Animal(MatrixStruct *matrix, ofstream &outputFile) : m(matrix), outPutFile(outputFile), waterFound(0), steps(0), deathIteration(-1)
+Animal::Animal(MatrixStruct *matrix) : m(matrix), waterFound(0), steps(0), deathIteration(-1)
 {
     srand(time(NULL));
     findFirstSafePlace();
     pathSequence.emplace_back(x, y);
     animalPath.resize(m->rows, vector<int>(m->columns, 0));
 
-    if (!outPutFile.is_open())
-    {
-        cerr << "Error: Could not open animal_journey.dat file!" << endl;
-    }
-
-    outPutFile << "Animal journey log:" << endl;
-    outPutFile << "Starting position: (" << x << ", " << y << ")" << endl;
+    FileReader::writeToOutput("Animal journey log:");
+    FileReader::writeToOutput("Starting position: (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 
     recordPosition();
 }
 
 Animal::~Animal()
 {
-    if (outPutFile.is_open())
+    FileReader::writeToOutput("\nSumario da jornada:");
+    std::string pathStr = "Caminho do animal: ";
+
+    for (size_t idx = 0; idx < pathSequence.size(); ++idx)
     {
-        outPutFile << endl
-                   << "Journey summary:" << endl;
-        // Output path
-        outPutFile << "Caminho do animal: ";
-        for (size_t idx = 0; idx < pathSequence.size(); ++idx)
-        {
-            if (idx > 0)
-                outPutFile << " -> ";
-            outPutFile << "(" << pathSequence[idx].first << "," << pathSequence[idx].second << ")";
-        }
-        outPutFile << endl;
-        // ... rest of summary
-        outPutFile << "Passos totais: " << steps << endl;
-        outPutFile << "Encontrou água: " << waterFound << (waterFound == 1 ? " vez" : " vezes") << endl;
-        if (deathIteration > 0)
-        {
-            outPutFile << "Iteração cercado: " << deathIteration << endl;
-            outPutFile << "Animal sobreviveu: Não" << endl;
-        }
-        else
-        {
-            outPutFile << "Iteração cercado: N/A" << endl;
-            outPutFile << "Animal sobreviveu: Sim" << endl;
-        }
+        if (idx > 0)
+            pathStr += " -> ";
+        pathStr += "(" + std::to_string(pathSequence[idx].first) + "," + std::to_string(pathSequence[idx].second) + ")";
+    }
+
+    FileReader::writeToOutput(pathStr);
+
+    // Substituir escritas diretas por chamadas à FileReader
+    FileReader::writeToOutput("Passos totais: " + std::to_string(steps));
+    FileReader::writeToOutput("Encontrou água: " + std::to_string(waterFound) + (waterFound == 1 ? " vez" : " vezes"));
+
+    if (deathIteration > 0)
+    {
+        FileReader::writeToOutput("Iteração cercado: " + std::to_string(deathIteration));
+        FileReader::writeToOutput("Animal sobreviveu: Não");
+    }
+    else
+    {
+        FileReader::writeToOutput("Iteração cercado: N/A");
+        FileReader::writeToOutput("Animal sobreviveu: Sim");
     }
 }
 
@@ -60,36 +53,17 @@ void Animal::findFirstSafePlace()
     {
         for (int j = 0; j < m->columns && !found; j++)
         {
-            if (m->matrix[i][j] == TREE)
+            if (m->matrix[i][j] == TREE || m->matrix[i][j] == EMPTY)
             {
                 x = i;
                 y = j;
                 found = true;
-                cout << "Safe place (tree) found at (" << x << ", " << y << ")" << endl;
             }
         }
     }
 
     if (!found)
     {
-        for (int i = 0; i < m->rows && !found; i++)
-        {
-            for (int j = 0; j < m->columns && !found; j++)
-            {
-                if (m->matrix[i][j] == EMPTY)
-                {
-                    x = i;
-                    y = j;
-                    found = true;
-                    cout << "Safe place (empty) found at (" << x << ", " << y << ")" << endl;
-                }
-            }
-        }
-    }
-
-    if (!found)
-    {
-        cerr << "Error: Could not find a safe place for the animal!" << endl;
         x = 0;
         y = 0;
     }
@@ -132,17 +106,14 @@ int Animal::getCellPriority(int cellType)
 
 bool Animal::moveAnimal()
 {
-    // Se estiver em área vazia, pode ficar até 3 iterações
     if (shouldStayInEmptyArea())
     {
-        cout << "Animal stayed in place at empty area (" << x << ", " << y << ")" << endl;
-        outPutFile << "Decision: Stayed in empty area" << endl;
+        FileReader::writeToOutput("\nDecision: Stayed in empty area");
         return true;
     }
 
     resetStayCounter();
 
-    // Encontrar a melhor célula para movimentação
     int highestPriority = -1;
     vector<pair<int, int>> candidateCells;
 
@@ -173,7 +144,6 @@ bool Animal::moveAnimal()
         }
     }
 
-    // Se encontrou células candidatas, move para uma delas aleatoriamente
     if (!candidateCells.empty())
     {
         int randomIndex = rand() % candidateCells.size();
@@ -181,7 +151,7 @@ bool Animal::moveAnimal()
         int newY = candidateCells[randomIndex].second;
 
         steps++;
-        outPutFile << "Step " << steps << ": Moving to (" << newX << ", " << newY << ")";
+        FileReader::writeToOutput("Step " + std::to_string(steps) + ": Moving to (" + std::to_string(newX) + ", " + std::to_string(newY) + ")");
 
         // Verifica se encontrou água
         if (m->matrix[newX][newY] == WATER)
@@ -189,11 +159,7 @@ bool Animal::moveAnimal()
             m->matrix[newX][newY] = EMPTY;
             waterFound++;
             convertWaterToForest(newX, newY);
-            outPutFile << " - Found water! Total found: " << waterFound << endl;
-        }
-        else
-        {
-            outPutFile << endl;
+            FileReader::writeToOutput(" - Found water! Total found: " + std::to_string(waterFound));
         }
 
         x = newX;
@@ -201,13 +167,13 @@ bool Animal::moveAnimal()
         pathSequence.emplace_back(x, y);
         recordPosition();
 
-        cout << "Animal moved to (" << x << ", " << y << ")" << endl;
         return true;
     }
     else
     {
-        cout << "Animal cannot move! Trapped at (" << x << ", " << y << ")" << endl;
-        outPutFile << "WARNING: Animal trapped at (" << x << ", " << y << ")" << endl;
+        FileReader::writeToOutput("WARNING: Animal trapped at (" + std::to_string(x) + ", " + std::to_string(y) + ")");
+        FileReader::writeToOutput("WARNING: Animal trapped at (" + std::to_string(x) + ", " + std::to_string(y) + ")");
+
         return false;
     }
 }
@@ -221,7 +187,7 @@ void Animal::convertWaterToForest(int x, int y)
 {
     m->matrix[x][y] = EMPTY;
 
-    outPutFile << "Converting surrounding cells to forest around (" << x << ", " << y << ")" << endl;
+    FileReader::writeToOutput("Converting surrounding cells to forest around (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 
     for (int i = 0; i < 4; i++)
     {
@@ -242,7 +208,8 @@ bool Animal::isInDanger()
 
 bool Animal::tryToEscape()
 {
-    outPutFile << "EMERGENCY: Animal in danger! Trying to escape..." << endl;
+    FileReader::writeToOutput("EMERGENCY: Animal in danger! Trying to escape...");
+
     return moveAnimal();
 }
 
@@ -273,7 +240,6 @@ void Animal::savePathMap()
         }
 
         pathMapFile.close();
-        cout << "Animal path map saved to animal_path_map.dat" << endl;
     }
     else
     {
@@ -284,24 +250,15 @@ void Animal::savePathMap()
 void Animal::recordDeath(int iteration)
 {
     deathIteration = iteration;
-    outPutFile << "DEATH: Animal died at iteration " << iteration << " at position (" << x << ", " << y << ")" << endl;
+    FileReader::writeToOutput("DEATH: Animal died at iteration " + std::to_string(iteration) + " at position (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 }
-
 void Animal::recordStatus(int iteration)
 {
-    outPutFile << "Iteration " << iteration << ": ";
-    outPutFile << "Position (" << x << ", " << y << "), ";
-    outPutFile << "Steps: " << steps << ", ";
-    outPutFile << "Water found: " << waterFound << ", ";
+    std::string status = "Iteration " + std::to_string(iteration) + ": " +
+                         "Position (" + std::to_string(x) + ", " + std::to_string(y) + "), " +
+                         "Steps: " + std::to_string(steps) + ", " +
+                         "Water found: " + std::to_string(waterFound) + ", " +
+                         "Status: " + (isInDanger() ? "IN DANGER" : "Safe");
 
-    // Add information about danger state
-    if (isInDanger())
-    {
-        outPutFile << "Status: IN DANGER";
-    }
-    else
-    {
-        outPutFile << "Status: Safe";
-    }
-    outPutFile << endl;
+    FileReader::writeToOutput(status);
 }
