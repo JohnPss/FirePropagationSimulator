@@ -1,6 +1,13 @@
 #pragma once
-#include <unordered_map>
 
-using namespace std;
+#include "MatrixStruct.hpp"
+#include <string>
+#include <utility>
+#include <sstream>
+#include <vector>
 
-extern unordered_map<int, int> prior;
+namespace Util
+{
+    std::string positionToString(const std::pair<int, int> &pos);
+    std::string generateMatrixStateString(const MatrixStruct *m);
+}

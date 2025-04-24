@@ -1,68 +1,65 @@
 #pragma once
 
 #include "MatrixStruct.hpp"
+#include "TerrainEnums.hpp"
 #include "FileReaderAndWriter.hpp"
-#include <iostream>
 #include <vector>
 #include <utility>
-#include <cstdlib>
-#include <ctime>
-#include <fstream>
 #include <string>
-
-using namespace std;
-
-enum TerrainState
-{
-    EMPTY = 0,
-    TREE = 1,
-    BURNING = 2,
-    BURNT = 3,
-    WATER = 4
-};
-
-enum MovePriority
-{
-    NONE = 0,
-    LOW = 1,
-    MEDIUM = 2,
-    HIGH = 3
-};
+#include <unordered_map>
 
 class Animal
 {
 private:
+    // Constants
+    static const int MAX_STAY_COUNT = 3;
+    static const int DIRECTION_COUNT = 4;
+
+    // Core data
     MatrixStruct *m;
     int x, y;
-    static int stayCounter;
-    int dx[4] = {1, -1, 0, 0};
-    int dy[4] = {0, 0, 1, -1};
-    vector<vector<int>> animalPath;
-    vector<pair<int, int>> pathSequence;
+    int stayCounter;
 
+    // Direction arrays
+    const int dx[DIRECTION_COUNT] = {1, -1, 0, 0};
+    const int dy[DIRECTION_COUNT] = {0, 0, 1, -1};
+
+    // Priority map - maps terrain type to priority
+    std::unordered_map<int, int> terrainPriority;
+
+    // Path tracking
+    std::vector<std::vector<int>> animalPath;
+    std::vector<std::pair<int, int>> pathSequence;
+
+    // Helper methods
     void findFirstSafePlace();
     bool shouldStayInEmptyArea();
     void resetStayCounter();
     void convertWaterToForest(int x, int y);
     void recordPosition();
     int getCellPriority(int cellType);
+    void initializePriorityMap();
 
 public:
+    // Statistics
     int waterFound;
     int steps;
     int deathIteration;
 
+    // Constructor & Destructor
     Animal(MatrixStruct *matrix);
     ~Animal();
+
+    // Movement methods
     bool moveAnimal();
     bool isInDanger();
     bool tryToEscape();
+
+    // Logging methods
     void recordStatus(int iteration);
     void savePathMap();
     void recordDeath(int iteration);
 
-    pair<int, int> getPosition()
-    {
-        return make_pair(x, y);
-    }
+    // Accessor
+    std::pair<int, int> getPosition() const { return std::make_pair(x, y); }
 };

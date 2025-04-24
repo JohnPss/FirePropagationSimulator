@@ -1,130 +1,107 @@
 #include "Fire.hpp"
-#include "Config.hpp"
-#include <iostream>
-#include <queue>
-#include <vector>
-#include <utility>
 #include <string>
 
-using namespace std;
+namespace
+{
+    enum Direction
+    {
+        NORTH,
+        SOUTH,
+        WEST,
+        EAST
+    };
+    constexpr int dx[] = {-1, 1, 0, 0};
+    constexpr int dy[] = {0, 0, -1, 1};
 
-const int dx[4] = {-1, 1, 0, 0};
-const int dy[4] = {0, 0, -1, 1};
+    std::string getDirectionName(int dir)
+    {
+        switch (dir)
+        {
+        case NORTH:
+            return "acima";
+        case SOUTH:
+            return "abaixo";
+        case WEST:
+            return "esquerda";
+        case EAST:
+            return "direita";
+        default:
+            return "desconhecida";
+        }
+    }
+}
 
 Fire::Fire(MatrixStruct *matrix) : m(matrix)
 {
-    centerX = m->initial_x; // Correção do typo (intial_x -> initial_x)
-    centerY = m->initial_y;
-
-    currentBurning.push(make_pair(centerX, centerY));
+    burningQueue.push({m->initial_x, m->initial_y});
+    logStateChange(m->initial_x, m->initial_y, 2);
 }
 
-bool Fire::doIt()
+bool Fire::spreadIteration()
 {
-    spreadFire();
-    updateBurningCells();
-    return !currentBurning.empty();
-}
+    if (burningQueue.empty())
+        return false;
 
-void Fire::spreadFire()
-{
-    if (currentBurning.empty())
+    while (!burningQueue.empty())
     {
-        return;
+        auto [x, y] = burningQueue.front();
+        burningQueue.pop();
+
+        m->matrix[x][y] = 3;
+        logStateChange(x, y, 3);
+
+        processSpread(x, y);
     }
 
-    while (!currentBurning.empty())
+    burningQueue = std::queue<std::pair<int, int>>();
+    for (auto &cell : nextSpread)
     {
-        pair<int, int> cell = currentBurning.front();
-        currentBurning.pop();
+        burningQueue.push(cell);
+    }
+    nextSpread.clear();
 
-        bool isFirstStage = false;
-        for (size_t i = 0; i < firstBurnStage.size(); i++)
+    return !burningQueue.empty();
+}
+
+bool Fire::isValidCell(int x, int y) const
+{
+    return x >= 0 && x < m->rows &&
+           y >= 0 && y < m->columns &&
+           m->matrix[x][y] == 1;
+}
+
+void Fire::logStateChange(int x, int y, int newState, const std::string &direction)
+{
+    std::string logEntry = "(" + std::to_string(x) + "," + std::to_string(y) + ") vira " + std::to_string(newState);
+    if (!direction.empty())
+    {
+        logEntry += " (" + direction + ")";
+    }
+    changeLog.push_back(logEntry);
+}
+
+void Fire::processSpread(int x, int y)
+{
+    for (int dir = 0; dir < 4; dir++)
+    {
+        if (WIND_ENABLED && !WIND_DIRECTIONS[dir])
+            continue;
+
+        int newX = x + dx[dir];
+        int newY = y + dy[dir];
+
+        if (isValidCell(newX, newY))
         {
-            if (firstBurnStage[i] == cell)
-            {
-                firstBurnStage.erase(firstBurnStage.begin() + i);
-                burningCells.push_back(cell);
-                isFirstStage = true;
-                break;
-            }
-        }
-
-        if (!isFirstStage)
-        {
-            firstBurnStage.push_back(cell);
-
-            // Nova parte: Registrar direções de propagação
-            for (int i = 0; i < 4; i++)
-            {
-                if (WIND_ENABLED && !WIND_DIRECTIONS[i])
-                    continue;
-
-                int newX = cell.first + dx[i];
-                int newY = cell.second + dy[i];
-
-                if (isValidBurnableCell(newX, newY))
-                {
-                    m->matrix[newX][newY] = 2;
-                    nextToBurn.push_back(make_pair(newX, newY));
-
-                    // Registrar mudança no log
-                    string direction;
-                    switch (i)
-                    {
-                    case 0:
-                        direction = "acima";
-                        break;
-                    case 1:
-                        direction = "abaixo";
-                        break;
-                    case 2:
-                        direction = "esquerda";
-                        break;
-                    case 3:
-                        direction = "direita";
-                        break;
-                    }
-                    changeLog.push_back(
-                        "(" + to_string(newX) + "," + to_string(newY) +
-                        ") vira 2 (" + direction + ")");
-                }
-            }
+            m->matrix[newX][newY] = 2;
+            nextSpread.emplace_back(newX, newY);
+            logStateChange(newX, newY, 2, getDirectionName(dir));
         }
     }
 }
 
-void Fire::updateBurningCells()
+std::vector<std::string> Fire::getChanges()
 {
-    for (const auto &cell : burningCells)
-    {
-        m->matrix[cell.first][cell.second] = 3;
-    }
-    burningCells.clear();
-
-    for (const auto &cell : firstBurnStage)
-    {
-        currentBurning.push(cell);
-    }
-
-    for (const auto &cell : nextToBurn)
-    {
-        currentBurning.push(cell);
-    }
-    nextToBurn.clear();
-}
-
-bool Fire::isValidBurnableCell(int x, int y) const
-{
-    return (x >= 0 && x < m->rows &&
-            y >= 0 && y < m->columns &&
-            m->matrix[x][y] == 1);
-}
-
-// Novo método para obter e limpar o log
-vector<string> Fire::getChangeLog()
-{
-    vector<string> logs = changeLog;
-    changeLog.clear();
+    std::vector<std::string> logs;
+    swap(logs, changeLog);
     return logs;
 }

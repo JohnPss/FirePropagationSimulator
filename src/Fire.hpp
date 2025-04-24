@@ -1,33 +1,25 @@
 #pragma once
-
+#include "MatrixStruct.hpp"
+#include "Config.hpp"
 #include <queue>
 #include <vector>
 #include <utility>
-#include "MatrixStruct.hpp"
-
-using namespace std;
-
-struct MatrixStruct;
+#include <string>
 
 class Fire
 {
 private:
     MatrixStruct *m;
-    int centerX;
-    int centerY;
+    std::queue<std::pair<int, int>> burningQueue;
+    std::vector<std::pair<int, int>> nextSpread;
+    std::vector<std::string> changeLog;
 
-    queue<pair<int, int>> currentBurning;
-    vector<pair<int, int>> burningCells;
-    vector<pair<int, int>> nextToBurn;
-    vector<pair<int, int>> firstBurnStage;
-
-    vector<string> changeLog; //
-    bool isValidBurnableCell(int x, int y) const;
+    bool isValidCell(int x, int y) const;
+    void logStateChange(int x, int y, int newState, const std::string &direction = "");
+    void processSpread(int x, int y);
 
 public:
     Fire(MatrixStruct *matrix);
-    vector<string> getChangeLog();
-    bool doIt();
-    void spreadFire();
-    void updateBurningCells();
+    bool spreadIteration();
+    std::vector<std::string> getChanges();
 };

@@ -1,8 +1,9 @@
 #pragma once
-#include <iostream>
-#include "FileReaderAndWriter.hpp"
+#include "MatrixStruct.hpp"
 #include "Animal.hpp"
 #include "Fire.hpp"
+#include "FileReaderAndWriter.hpp"
 #include "Config.hpp"
+#include "Util.hpp"
 
 void startSimulation(MatrixStruct *m);
