@@ -1,5 +1,6 @@
 #include "Fire.hpp"
 #include <string>
+#include <set>
 
 namespace
 {
@@ -12,7 +13,6 @@ namespace
     };
     constexpr int dx[] = {-1, 1, 0, 0};
     constexpr int dy[] = {0, 0, -1, 1};
-
 }
 
 Fire::Fire(MatrixStruct *matrix) : m(matrix)
@@ -25,17 +25,34 @@ bool Fire::spreadIteration()
     if (burningQueue.empty())
         return false;
 
+    static std::set<std::pair<int, int>> secondBurn;
+    std::set<std::pair<int, int>> toProcessAgain;
+
     while (!burningQueue.empty())
     {
         auto [x, y] = burningQueue.front();
         burningQueue.pop();
 
-        m->matrix[x][y] = 3;
+        if (secondBurn.find({x, y}) == secondBurn.end())
+        {
+            m->matrix[x][y] = 2;
+            secondBurn.insert({x, y});
+            toProcessAgain.insert({x, y});
 
-        processSpread(x, y);
+            processSpread(x, y);
+        }
+        else
+        {
+            m->matrix[x][y] = 3;
+            secondBurn.erase({x, y});
+        }
     }
 
-    burningQueue = std::queue<std::pair<int, int>>();
+    for (const auto &cell : toProcessAgain)
+    {
+        burningQueue.push(cell);
+    }
+
     for (auto &cell : nextSpread)
     {
         burningQueue.push(cell);
