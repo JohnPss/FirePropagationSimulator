@@ -2,7 +2,6 @@
 
 namespace Util
 {
-    // Converts a position (pair of integers) to string
     std::string positionToString(const std::pair<int, int> &pos)
     {
         std::stringstream ss;
@@ -10,7 +9,6 @@ namespace Util
         return ss.str();
     }
 
-    // Generates a string representation of the matrix
     std::string generateMatrixStateString(const MatrixStruct *m)
     {
         std::stringstream matrixStr;

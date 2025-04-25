@@ -15,7 +15,6 @@ private:
     std::vector<std::string> changeLog;
 
     bool isValidCell(int x, int y) const;
-    void logStateChange(int x, int y, int newState, const std::string &direction = "");
     void processSpread(int x, int y);
 
 public:

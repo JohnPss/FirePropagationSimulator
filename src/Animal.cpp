@@ -21,8 +21,6 @@ Animal::Animal(MatrixStruct *matrix)
     findFirstSafePlace();
     pathSequence.emplace_back(x, y);
 
-    FileReader::writeToOutput("Jornada do animal:");
-    FileReader::writeToOutput("Posição inicial: (" + std::to_string(x) + ", " + std::to_string(y) + ")");
     recordPosition();
 }
 
@@ -114,7 +112,6 @@ bool Animal::moveAnimal()
 
     if (shouldStayInEmptyArea())
     {
-        FileReader::writeToOutput("\nFicando no mesmo lugar");
         return true;
     }
 
@@ -157,14 +154,12 @@ bool Animal::moveAnimal()
         int newY = candidateCells[randomIndex].second;
 
         steps++;
-        FileReader::writeToOutput("Passo " + std::to_string(steps) + ": Indo para (" + std::to_string(newX) + ", " + std::to_string(newY) + ")");
 
         if (m->matrix[newX][newY] == WATER)
         {
             m->matrix[newX][newY] = EMPTY;
             waterFound++;
             convertWaterToForest(newX, newY);
-            FileReader::writeToOutput(" - Achou agua!");
         }
 
         x = newX;
@@ -176,8 +171,6 @@ bool Animal::moveAnimal()
     }
     else
     {
-
-        FileReader::writeToOutput("PERIGO: Animal preso em (" + std::to_string(x) + ", " + std::to_string(y) + ")");
         return false;
     }
 }
@@ -190,8 +183,6 @@ void Animal::recordPosition()
 void Animal::convertWaterToForest(int x, int y)
 {
     m->matrix[x][y] = EMPTY;
-
-    FileReader::writeToOutput("Convertendo células adjacentes para água (" + std::to_string(x) + ", " + std::to_string(y) + ")");
 
     for (int i = 0; i < DIRECTION_COUNT; i++)
     {
@@ -212,25 +203,12 @@ bool Animal::isInDanger()
 
 bool Animal::tryToEscape()
 {
-    FileReader::writeToOutput("PERIGO: Animal em perigo! Tentando escapar...");
     return moveAnimal();
 }
 
 void Animal::recordDeath(int iteration)
 {
     deathIteration = iteration;
-    FileReader::writeToOutput("MORTE: Animal morreu na interação: " + std::to_string(iteration) + " na posição (" + std::to_string(x) + ", " + std::to_string(y) + ")");
-}
-
-void Animal::recordStatus(int iteration)
-{
-    std::string status = "Iteração " + std::to_string(iteration) + ": " +
-                         "Posição (" + std::to_string(x) + ", " + std::to_string(y) + "), " +
-                         "Passos: " + std::to_string(steps) + ", " +
-                         "Água encontrada: " + std::to_string(waterFound) + ", " +
-                         "Status: " + (isInDanger() ? "EM PERIGO" : "Seguro");
-
-    FileReader::writeToOutput(status);
 }
 
 void Animal::savePathMap()

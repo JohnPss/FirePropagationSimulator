@@ -13,28 +13,11 @@ namespace
     constexpr int dx[] = {-1, 1, 0, 0};
     constexpr int dy[] = {0, 0, -1, 1};
 
-    std::string getDirectionName(int dir)
-    {
-        switch (dir)
-        {
-        case NORTH:
-            return "acima";
-        case SOUTH:
-            return "abaixo";
-        case WEST:
-            return "esquerda";
-        case EAST:
-            return "direita";
-        default:
-            return "desconhecida";
-        }
-    }
 }
 
 Fire::Fire(MatrixStruct *matrix) : m(matrix)
 {
     burningQueue.push({m->initial_x, m->initial_y});
-    logStateChange(m->initial_x, m->initial_y, 2);
 }
 
 bool Fire::spreadIteration()
@@ -48,7 +31,6 @@ bool Fire::spreadIteration()
         burningQueue.pop();
 
         m->matrix[x][y] = 3;
-        logStateChange(x, y, 3);
 
         processSpread(x, y);
     }
@@ -70,16 +52,6 @@ bool Fire::isValidCell(int x, int y) const
            m->matrix[x][y] == 1;
 }
 
-void Fire::logStateChange(int x, int y, int newState, const std::string &direction)
-{
-    std::string logEntry = "(" + std::to_string(x) + "," + std::to_string(y) + ") vira " + std::to_string(newState);
-    if (!direction.empty())
-    {
-        logEntry += " (" + direction + ")";
-    }
-    changeLog.push_back(logEntry);
-}
-
 void Fire::processSpread(int x, int y)
 {
     for (int dir = 0; dir < 4; dir++)
@@ -94,7 +66,6 @@ void Fire::processSpread(int x, int y)
         {
             m->matrix[newX][newY] = 2;
             nextSpread.emplace_back(newX, newY);
-            logStateChange(newX, newY, 2, getDirectionName(dir));
         }
     }
 }
