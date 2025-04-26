@@ -1,6 +1,8 @@
 <p align="center">
-  <img src="https://github.com/JohnPss/FirePropagationSimulator/blob/main/Images/cover.png" alt="Sublime's custom image"/>
+  <img src="https://github.com/JohnPss/FirePropagationSimulator/blob/main/Images/cover.png" alt="Sublime's custom image"
+        width="400" />
 </p>
+
 
 
 
