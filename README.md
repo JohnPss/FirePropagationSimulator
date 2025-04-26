@@ -217,7 +217,9 @@ Essa classe é o núcleo da simulação, sincronizando todas as componentes e ga
 ## 📊🔍Estudo de Caso / Resultados
 
 [Caso 1:  Matriz Comum sem Influência do Vento](https://github.com/JohnPss/FirePropagationSimulator/tree/main/TestCases/Case1)
+
 [Caso 2:  Animal Utiliza a Segunda Chance e Morre](https://github.com/JohnPss/FirePropagationSimulator/tree/main/TestCases/Case2)
+
 [Caso 3: Com Aplicação do Vento ](https://github.com/JohnPss/FirePropagationSimulator/tree/main/TestCases/Case3)
 
 
