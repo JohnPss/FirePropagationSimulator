@@ -68,7 +68,10 @@
     "typeinfo": "cpp",
     "variant": "cpp",
     "strstream": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "regex": "cpp",
+    "future": "cpp",
+    "*.ipp": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

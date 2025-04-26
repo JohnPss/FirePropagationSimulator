@@ -5,7 +5,6 @@ Este caso de teste simula uma situação em que o animal ativa sua segunda chanc
 O teste valida o funcionamento correto da funcionalidade de "segunda chance" e garante que as condições de morte sejam devidamente tratadas após a tentativa extra de sobrevivência.
 
 
-
 ```
 Estado Inicial:
 🐾🔥🌲🌲🌲

@@ -10,8 +10,10 @@ MatrixStruct *readFile()
 
     if (!inputFile.is_open())
     {
-        cerr << "Erro ao abrir o arquivo" << endl;
-        return NULL;
+        ofstream logFile("error.log", ios::app);
+        logFile << "Error ao abir 'input.dat'" << endl;
+        logFile.close();
+        exit(1);
     }
 
     inputFile >> matStruct->rows >> matStruct->columns >> matStruct->initial_x >> matStruct->initial_y;
@@ -33,7 +35,7 @@ void FileReader::openOutputFile()
     outputStream.open("output.dat");
     if (!outputStream.is_open())
     {
-        cerr << "Erro ao abrir o arquivo de saída" << endl;
+        exit(1);
     }
 }
 

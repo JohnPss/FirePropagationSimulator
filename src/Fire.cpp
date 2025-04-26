@@ -25,8 +25,8 @@ bool Fire::spreadIteration()
     if (burningQueue.empty())
         return false;
 
-    static std::set<std::pair<int, int>> secondBurn;
-    std::set<std::pair<int, int>> toProcessAgain;
+    static set<pair<int, int>> secondBurn;
+    set<pair<int, int>> toProcessAgain;
 
     while (!burningQueue.empty())
     {
@@ -87,9 +87,9 @@ void Fire::processSpread(int x, int y)
     }
 }
 
-std::vector<std::string> Fire::getChanges()
+vector<string> Fire::getChanges()
 {
-    std::vector<std::string> logs;
+    vector<string> logs;
     swap(logs, changeLog);
     return logs;
 }

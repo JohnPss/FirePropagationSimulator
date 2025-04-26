@@ -21,10 +21,10 @@ private:
     const int dx[DIRECTION_COUNT] = {1, -1, 0, 0};
     const int dy[DIRECTION_COUNT] = {0, 0, 1, -1};
 
-    std::unordered_map<int, int> terrainPriority;
+    unordered_map<int, int> terrainPriority;
 
-    std::vector<std::vector<int>> animalPath;
-    std::vector<std::pair<int, int>> pathSequence;
+    vector<vector<int>> animalPath;
+    vector<pair<int, int>> pathSequence;
 
     void findFirstSafePlace();
     bool shouldStayInEmptyArea();
@@ -48,5 +48,5 @@ public:
     void savePathMap();
     void recordDeath(int iteration);
 
-    std::pair<int, int> getPosition() const { return std::make_pair(x, y); }
+    pair<int, int> getPosition() const { return make_pair(x, y); }
 };
