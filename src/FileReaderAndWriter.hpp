@@ -5,7 +5,6 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-
 using namespace std;
 
 class FileReader
@@ -20,4 +19,3 @@ private:
 };
 
 MatrixStruct *readFile();
-ofstream outPutFile();

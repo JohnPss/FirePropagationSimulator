@@ -15,7 +15,6 @@ Este projeto implementa uma simulação que modela a propagação de fogo em uma
 
 A simulação utiliza uma estrutura de dados que representa o ambiente, onde diferentes células podem ser árvores, água, áreas queimadas ou áreas vazias. O código é implementado em **C++** e é estruturado em várias classes e arquivos que encapsulam as funcionalidades específicas.
 
----
 
 
 ## 📋 Problema proposto
@@ -44,7 +43,6 @@ A matriz inicial deve ser lida a partir do arquivo `input.dat`. A cada iteraçã
 ### **📝Requisitos Técnicos** 
 O projeto deve ser desenvolvido em **C/C++**, utilizando boas práticas de organização do código, com separação em pastas (`src`, headers). A compilação deverá ser gerenciada via `Makefile`, e o executável precisa ser compatível com sistemas **Linux**. Também é exigida uma análise de desempenho para comparar as diferentes estratégias de propagação do fogo.
 
----
 ## 📂Entrada de Dados
 
 #### **📥Arquivo de Entrada (`input.dat`)**
@@ -68,7 +66,6 @@ O arquivo `config.hpp` define parâmetros globais para controle da simulação.
    - `WIND_DIRECTIONS[4]`: Vetor que especifica as direções permitidas para propagação (índices fixos):  
    - `MAX_ITERATIONS`: Número máximo de ciclos da simulação antes do encerramento automático (valor fixo em 1000).
 
----
 
 #### Exemplo de Configuração
 ```cpp
@@ -114,8 +111,7 @@ Foi implementada uma regra de movimentação em que o animal analisa as casas ad
 bool funcao moveAnimal()
 	/*Seção do código encarregada de verificar as posições ortogonais e inserir em 
 	`candidateCells` aquelas que forem válidas, respeitando os limites da matriz e as 
-	prioridades definidas para as células.
-*/
+	prioridades definidas para as células. */
 	...
 	se há candidateCells:
         escolher posição_aleatória em candidateCells
@@ -217,46 +213,117 @@ Após o término da propagação do fogo ou ao atingir o número máximo definid
 
 Essa classe é o núcleo da simulação, sincronizando todas as componentes e garantindo a execução ordenada das regras definidas no problema.
 
----
 
-## Estudo de Caso / Resultados
+## 📊🔍Estudo de Caso / Resultados
 
-A simulação foi testada com diferentes configurações, onde o ambiente foi inicializado com diversas disposições de árvores e água. Os resultados mostraram que o comportamento do fogo e do animal era sensível à configuração inicial da matriz.
+[Caso 1:  Matriz Comum sem Influência do Vento](https://github.com/JohnPss/FirePropagationSimulator/tree/main/TestCases/Case1)
+[Caso 2:  Animal Utiliza a Segunda Chance e Morre](https://github.com/JohnPss/FirePropagationSimulator/tree/main/TestCases/Case2)
+[Caso 3: Com Aplicação do Vento ](https://github.com/JohnPss/FirePropagationSimulator/tree/main/TestCases/Case3)
 
-### Os dados coletados foram analisados em relação a:
 
-- A taxa de propagação do fogo em áreas densamente arborizadas em comparação com áreas com água.
-- A capacidade do animal de encontrar rotas seguras para evitar áreas em chamas.
 
-Os resultados são documentados com um **log** que mostra:
 
-- A trajetória do animal
-- O progresso do fogo
+## ✅📘Conclusão
 
-As saídas são gravadas em um arquivo `output.dat` para referência futura.
+O projeto de simulação de incêndios florestais foi validado com base em três casos de teste principais.
 
-![](Images/simulationGif.gif)
-
----
-
-## Conclusão
-
-A simulação demonstrou com sucesso a interação entre o fogo e o animal em um ambiente bidimensional. A implementação permitiu visualizar claramente:
-
-- A propagação do fogo
-- O movimento do animal diante de diversas condições
+-   **Animal Utiliza a Segunda Chance e Morre**: Validou o funcionamento do mecanismo de "segunda chance" para o animal, que, após ser atingido pelo fogo, tentou sobreviver, mas acabou morrendo.
+    
+-   **Matriz Comum sem Influência do Vento**: Verificou a propagação do fogo e a movimentação do animal em um cenário simples, sem vento, com o animal sobrevivendo.
+    
+-   **Com Aplicação do Vento**: Garantiu que o fogo se propagasse nas direções corretas (Norte e Oeste) e que o animal reagisse adequadamente ao ambiente, evitando áreas de risco.
 
 As possibilidades de extensões futuras, como a inclusão de vento e outros fatores ambientais, foram identificadas como áreas para melhorias.
 
----
 
-## Referências
+## 👨🏻‍🔬 Ambiente de Teste
+O código foi desenvolvido utilizando as seguintes ferramentas:
+
+
+![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg) ![g++](https://img.shields.io/badge/g++-13.3.0-blue.svg) ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-orange?logo=ubuntu) ![VSCode](https://img.shields.io/badge/VSCode-1.99.3-blue?logo=visualstudiocode)
+
+**Hardwere:**
+  **Processador**: Ryzen 7 5700X  
+   **Memória RAM**: 32GB 
+
+
+## 🔧💻Modo de Compilação
+
+
+**Clonar o repositório**:
+```
+git clone https://github.com/JohnPss/FirePropagationSimulator
+cd FirePropagationSimulator
+```
+
+**Instalar dependências** (se necessário): Caso você não tenha o G++ e o Make instalados, execute o seguinte comando no terminal:
+```
+sudo apt update
+sudo apt install build-essential
+```
+
+**Compilar e executar o projeto**: Agora, basta executar os seguintes comandos para compilar e rodar a simulação:
+```
+make clean
+make
+make run
+```
 
 
 
----
 
-## Modo de Compilação
+## **📂Organização no Repositório**:
 
-Para compilar e executar o projeto, siga os passos abaixo:
+```
+FirePropagation/
+├── vscode/
+├── build/
+├── Images/
+├── src/
+│   ├── Animal.cpp
+│   ├── Animal.hpp
+│   ├── Config.hpp
+│   ├── FileReaderAndWriter.cpp
+│   ├── FileReaderAndWriter.hpp
+│   ├── Fire.cpp
+│   ├── Fire.hpp
+│   ├── main.cpp
+│   ├── MatrixStruct.cpp
+│   ├── MatrixStruct.hpp
+│   ├── Simulation.cpp
+│   ├── Simulation.hpp
+│   ├── TerrainEnums.hpp
+│   ├── Util.cpp
+│   └── Util.hpp
+├── TestCases/
+├── animal_path_map.dat
+├── input.dat
+├── Makefile
+├── output.dat
+└── README.md
+```
+
+## Bibliotecas Utilizadas
+
+O projeto utiliza as seguintes bibliotecas para fornecer funcionalidades essenciais:
+
+-   **`<vector>`**: Para manipulação de vetores dinâmicos.
+-   **`<utility>`**: Para funções auxiliares, como `std::pair`.
+-   **`<string>`**: Para manipulação de strings.
+-   **`<unordered_map>`**: Para uso de mapas de hash eficientes.
+-   **`<queue>`**: Para trabalhar com filas (útil para a propagação de incêndio).
+-   **`<cstdlib>`**: Para funções utilitárias gerais, como geração de números aleatórios.
+-   **`<sstream>`**: Para conversão de dados em streams de strings.
+-   **`<fstream>`**: Para leitura e escrita de arquivos.
+-   **`<iostream>`** : Para entrada e saída padrão.
+
+### 🚀Melhorias Futuras
+
+Embora o projeto esteja funcional, há várias áreas que podem ser aprimoradas:
+
+- Além disso, seria interessante adicionar suporte para múltiplos animais, permitindo comportamentos e prioridades distintas para cada um, o que tornaria a simulação mais complexa e realista.
+- Outro ponto que pode ser aprimorado é a movimentação do animal, implementando uma IA mais inteligente com algoritmos de busca como A* ou Dijkstra, otimizando o caminho até as áreas seguras.
+- A variedade no terreno também pode ser aumentada, incluindo novos obstáculos naturais, como mudanças na direção do vento ou diferentes tipos de vegetação que afetam a propagação do fogo.
+
+
 
