@@ -7,7 +7,7 @@
 
 
 
-# Documentação do Projeto de Simulação de Espalhamento de Fogo e Movimento de Animais
+# Simulação de Espalhamento de Fogo e Movimento de Animais
 
 ## Introdução
 
