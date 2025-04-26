@@ -1,10 +1,15 @@
+<p align="center">
+  <img src="https://github.com/JohnPss/FirePropagationSimulator/blob/main/Images/cover.png" alt="Sublime's custom image"/>
+</p>
+
+
 
 
 # Documentação do Projeto de Simulação de Espalhamento de Fogo e Movimento de Animais
 
 ## Introdução
 
-Projeto feito para disciplica de AEDS (Algoritmos e Estrutura de Dados) do Centro Federal de Educação Tecnologica de Minas Gerais (CEFET-MG) Campus V - Divinopolis, Disciplina ministrada pelo professor Michel Pires.
+Projeto desenvolvido para a disciplina de Algoritmos e Estruturas de Dados (AEDS), do Centro Federal de Educação Tecnológica de Minas Gerais (CEFET-MG), Campus V – Divinópolis.  Disciplina ministrada pelo professor Michel Pires.
 
 Este projeto implementa uma simulação que modela a propagação de fogo em uma matriz que representa um ambiente em 2D, enquanto um animal tenta se mover dentro desse ambiente. O objetivo principal é observar a interação entre o fogo e o animal, além de registrar a trajetória do animal e as mudanças no ambiente à medida que o fogo se espalha.
 
