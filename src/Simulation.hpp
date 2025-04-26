@@ -6,4 +6,4 @@
 #include "Config.hpp"
 #include "Util.hpp"
 
-void startSimulation(MatrixStruct *m);
+void runSimulation(MatrixStruct *m);

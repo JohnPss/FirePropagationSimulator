@@ -3,6 +3,6 @@
 int main()
 {
     MatrixStruct *m = readFile();
-    startSimulation(m);
+    runSimulation(m);
     return 0;
 }

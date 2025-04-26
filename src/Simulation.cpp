@@ -34,7 +34,7 @@ bool handleAnimalInDanger(Animal &animal, int iteration, int &chancesLeft)
     }
 }
 
-void startSimulation(MatrixStruct *m)
+void runSimulation(MatrixStruct *m)
 {
     FileReader::openOutputFile();
     int chancesLeft = 1;
