@@ -7,11 +7,11 @@
 
 
 
-# Simulação de Espalhamento de Fogo e Movimento de Animais
+# FirePropagationSimulator
 
 ## Introdução
 
-Projeto desenvolvido para a disciplina de Algoritmos e Estruturas de Dados (AEDS), do Centro Federal de Educação Tecnológica de Minas Gerais (CEFET-MG), Campus V – Divinópolis.  Disciplina ministrada pelo professor Michel Pires.
+Projeto desenvolvido para a disciplina de Algoritmos e Estruturas de Dados (AEDS), do Centro Federal de Educação Tecnológica de Minas Gerais (CEFET-MG), Campus V – Divinópolis.  Disciplina ministrada pelo professor [Michel Pires](https://github.com/mpiress).
 
 Este projeto implementa uma simulação que modela a propagação de fogo em uma matriz que representa um ambiente em 2D, enquanto um animal tenta se mover dentro desse ambiente. O objetivo principal é observar a interação entre o fogo e o animal, além de registrar a trajetória do animal e as mudanças no ambiente à medida que o fogo se espalha.
 
@@ -329,5 +329,19 @@ Embora o projeto esteja funcional, há várias áreas que podem ser aprimoradas:
 - Outro ponto que pode ser aprimorado é a movimentação do animal, implementando uma IA mais inteligente com algoritmos de busca como A* ou Dijkstra, otimizando o caminho até as áreas seguras.
 - A variedade no terreno também pode ser aumentada, incluindo novos obstáculos naturais, como mudanças na direção do vento ou diferentes tipos de vegetação que afetam a propagação do fogo.
 
+### 📚Creditos
+
+Arquivo Makefile concedido pelo professor [michel pires](https://github.com/mpiress)
+
+### ✍️Autor
+
+Joao Pedro Siqueira
+
+<div>
+
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:joaopedrosilvasiqueira1@gmail.com) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jo%C3%A3o-pedro-siqueira-647b1a260/) [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JohnPss)
+
+</div>
 
 
+---
