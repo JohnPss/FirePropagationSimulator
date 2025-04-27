@@ -185,7 +185,7 @@ Após o término da propagação do fogo ou ao atingir o número máximo definid
 
  **Exemplo:**  
 - Caminho percorrido pelo animal (coordenadas em sequência).  
-- Passos totais.  
+- Passos totais. (Contados apenas quando o animal se desloca de uma célula para outra.)
 - Número de vezes que encontrou água.  
 - Iteração em que foi cercado (se aplicável).  
 - Status de sobrevivência (`Sim` ou `Não`).
