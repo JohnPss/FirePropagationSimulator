@@ -66,7 +66,7 @@ O arquivo `config.hpp` define parâmetros globais para controle da simulação.
 #### Configurações Disponíveis
    - `WIND_ENABLED`: Ativa (`true`) ou desativa (`false`) a influência do vento na propagação do fogo.
    - `WIND_DIRECTIONS[4]`: Vetor que especifica as direções permitidas para propagação (índices fixos):  
-   - `MAX_ITERATIONS`: Número máximo de ciclos da simulação antes do encerramento automático (valor fixo em 1000).
+   - `MAX_ITERATIONS`: Número máximo de ciclos da simulação antes do encerramento automático.
 
 
 #### Exemplo de Configuração
