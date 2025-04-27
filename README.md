@@ -331,7 +331,7 @@ Embora o projeto esteja funcional, há várias áreas que podem ser aprimoradas:
 
 ### 📚Creditos
 
-Arquivo Makefile concedido pelo professor [michel pires](https://github.com/mpiress)
+Arquivo Makefile concedido pelo professor [Michel Pires](https://github.com/mpiress)
 
 ### ✍️Autor
 
