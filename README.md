@@ -247,7 +247,8 @@ O código foi desenvolvido utilizando as seguintes ferramentas:
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg) ![g++](https://img.shields.io/badge/g++-13.3.0-blue.svg) ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-orange?logo=ubuntu) ![VSCode](https://img.shields.io/badge/VSCode-1.99.3-blue?logo=visualstudiocode)
 
 **Hardwere:**
-  **Processador**: Ryzen 7 5700X  
+
+   **Processador**: Ryzen 7 5700X  
    **Memória RAM**: 32GB 
 
 
