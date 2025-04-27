@@ -13,9 +13,9 @@
 
 Projeto desenvolvido para a disciplina de Algoritmos e Estruturas de Dados (AEDS), do Centro Federal de Educação Tecnológica de Minas Gerais (CEFET-MG), Campus V – Divinópolis.  Disciplina ministrada pelo professor [Michel Pires](https://github.com/mpiress).
 
-Este projeto implementa uma simulação que modela a propagação de fogo em uma matriz que representa um ambiente em 2D, enquanto um animal tenta se mover dentro desse ambiente. O objetivo principal é observar a interação entre o fogo e o animal, além de registrar a trajetória do animal e as mudanças no ambiente à medida que o fogo se espalha.
+Este projeto implementa uma simulação da propagação de fogo em uma matriz, enquanto um animal tenta se mover dentro desse ambiente. O objetivo principal é observar a interação entre o fogo e o animal, além de registrar a trajetória do animal e as mudanças no ambiente à medida que o fogo se espalha.
 
-A simulação utiliza uma estrutura de dados que representa o ambiente, onde diferentes células podem ser árvores, água, áreas queimadas ou áreas vazias. O código é implementado em **C++** e é estruturado em várias classes e arquivos que encapsulam as funcionalidades específicas.
+A simulação utiliza uma estrutura de dados que representa o ambiente, onde diferentes células podem ser árvores, água, áreas queimadas ou áreas vazias. O código é implementado em **C++**.
 
 
 
@@ -36,7 +36,7 @@ Implementar um simulador de propagação de incêndios em uma floresta represent
 O simulador deve implementar as regras de transição de estados, seguindo a sequência (`1 → 2 → 3`). Deve também suportar dois modos de propagação: o modo **sem vento**, onde o fogo se propaga apenas nas quatro direções ortogonais, e o modo **com vento**, onde as direções de propagação podem ser configuradas no arquivo `config.h`.
 
  **🦌Movimentação do Animal🐾**  
-Durante a simulação, o animal deve se movimentar priorizando as células consideradas seguras, obedecendo a ordem de preferência (`4 > 0/1 > 3`). Quando encontrar uma célula de água (`4`), ele deverá transformá-la em área segura (`0`) e regenerar árvores (`1`) nas casas adjacentes. O animal também contará com um mecanismo de "segunda chance" caso seja atingido pelo fogo.
+Durante a simulação, o animal deve se movimentar priorizando as células consideradas seguras, obedecendo a ordem de preferência (`4 > 0/1 > 3`). Quando encontrar uma célula de água (`4`), ele deverá transformá-la em área segura (`0`) e modificar para árvores (`1`) nas casas adjacentes. O animal também contará com um mecanismo de "segunda chance" caso seja atingido pelo fogo.
 
  **📥Entrada/Saída📤**  
 A matriz inicial deve ser lida a partir do arquivo `input.dat`. A cada iteração da simulação, o estado da matriz deve ser salvo em `output.dat`, registrando o avanço da propagação do incêndio. Ao final da execução, um relatório deve ser gerado contendo informações sobre os passos percorridos, a quantidade de água encontrada e o status de sobrevivência do animal.
@@ -105,7 +105,7 @@ O animal inicia a simulação buscando uma célula segura, que pode ser:
 -   **0**: Área vazia
    
 
-Ele se estabelece na primeira célula segura que encontrar na matriz.
+Ele se nasce na primeira célula segura que encontrar na matriz.
 
 Foi implementada uma regra de movimentação em que o animal analisa as casas adjacentes e verifica suas prioridades. Se houver duas ou mais casas com a maior prioridade entre as adjacentes, a movimentação é escolhida aleatoriamente entre elas. Caso exista apenas uma casa com a maior prioridade, o animal se move automaticamente para essa casa.
 
